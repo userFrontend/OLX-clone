@@ -1,0 +1,266 @@
+h1 {
+    text-align: center;
+  }
+
+.update{
+    background-color: #f2f4f5;
+    color: #002f34;
+    width: 100%;
+    .top-account{
+        max-width: 1560px;
+        margin: 0 auto;
+        .top-btn{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+            padding: 50px;
+            .btn{
+                display: flex;
+                gap: 20px;
+                align-items: center;
+                text-align: end;
+                button{
+                    color: #002f34;
+                    border: 2px solid #002f34;
+                    padding: 10px;
+                    border-radius: 5px;
+                }
+            }
+        }
+        nav{
+            ul{
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                background-color: white;
+                list-style-type: none;
+                padding: 20px 0;
+                li{
+                    cursor: pointer;
+                    a{
+                        text-decoration: none;
+                        color: gray;
+                    }
+                    .active{
+                        border-bottom: 2px solid black;
+                        padding: 20px;
+                        &{
+                            color: #002f34;
+                            background-color: white;
+                        }
+                    }
+                    &:hover{
+                        background-color: #002f34;
+                        color: rgb(4, 4, 4);
+                    }
+                }
+            }
+        }
+
+    }
+    .exit{
+        display: none;
+    }
+    .none{
+        display: none;
+    }
+    .accordion {
+        width: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin: 0 auto;
+        .drop-container {
+            position: relative;
+            margin: 10px 10px;
+        }
+        .label {
+            background-color: white;
+            position: relative;
+            padding: 20px;
+            font-size: 18px;
+            color: black;
+            cursor: pointer;
+            &::before {
+                content: '>';
+                color: black;
+                position: absolute;
+                top: 50%;
+                right: 20px;
+                font-size: 30px;
+                transform: translateY(-50%);
+            }
+        }
+        .content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: white;
+            width: 800px;
+            height: 0;
+            font-size: 16px;
+            overflow: hidden;
+            padding: 0 20px;
+            border-top: 1px solid #f2f4f5;
+            transition: 0.5s;
+            label{
+                padding-top: 25px;
+                input, select{
+                    background-color: #f2f4f5;
+                    border: none;
+                    outline: none;
+                    padding: 15px 20px;
+                    width: 400px;
+                    border-radius: 5px;
+                    margin: 10px 0;
+                }
+            }
+            
+            button{
+                margin: 20px 0;
+                padding: 10px 20px;
+                width: 200px;
+                font-size: 18px;
+                color: white;
+                background-color: #002f34;
+                border-radius: 5px;
+                border: none;
+            }
+        }
+        .check-box{
+            width: 800px;
+            p{
+                font-size: 14px;
+                color: gray;
+            }
+            .checkbox{
+                border-top: 1px solid #f2f4f5;
+                display: flex;
+                align-items: center;
+                gap: 30px;
+                .text{
+                    width: 500px;
+                }
+                .checkbox-input{
+                    display: flex;
+                    gap: 50px;
+                    .top-text{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 30px;
+                    }
+                    i{
+                        cursor: pointer;
+                        width: 25px;
+                        height:25px;
+                        padding: 5px;
+                        color: white;
+                        border-radius: 5px;
+                        background-color: #002f34;
+                    }
+                    .set{
+                        background-color: white;
+                        color: white;
+                        border: 2px solid #002f34;
+                    }
+                }
+            }
+        }
+        
+    }
+
+
+
+
+    /* Adds a horizontal line between the contents */
+    
+    .accordion hr {
+        width: 100;
+        margin-left: 0;
+        border: 1px solid grey;
+    }
+
+    .accordion .drop-container.active .content {
+        height: 100%;
+    }
+    
+    /* Changes from plus sign to negative sign once active */
+    
+    .accordion .drop-container.active .label::before {
+        content: '--';
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 1024px){
+    .update{
+        width: 100%;
+        padding-bottom: 50px;
+        .top-account{
+            .top-btn{
+                flex-direction: column;
+                align-items: start;
+                padding: 20px;
+                gap: 20px;
+                .btn{
+                    display: none;
+                }
+            }
+        }
+        .none{
+            display: block;
+        }
+        .exit{
+            display: block;
+        }
+        nav{
+            display: none;
+        }
+        .accordion{
+            margin: 0;
+            width: 100%;
+            .drop-container{
+                width: 100%;
+            }
+            .check-box{
+                width: 100%;
+            }
+            .content{
+                width: 100%;
+            }
+            .check-box{
+                width: 100%;
+                flex-wrap: wrap;
+            }
+        }
+        .help{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #002f34;
+            gap: 10px;
+            padding: 20px 0;
+            div{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+                cursor: pointer;
+            }
+            span{
+                height: 2px;
+                width: 100%;
+                background-color: #002f34;
+                transition: all 0.2s ease;
+            }
+            &:hover{
+                span{
+                    width: 50%;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+.box-profile{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f2f4f5;
+    .profile-image{
+        display: flex;
+        gap: 10px;
+        color: gray;
+        h3{
+            font-size: 14px;
+        }
+        img{
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    }
+    .description{
+        font-size: 14px;
+        text-align: end;
+        color: gray;
+    }
+}

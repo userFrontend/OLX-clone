@@ -1,0 +1,106 @@
+.liked{
+    color: #002f34;
+    background-color: #f2f4f5;
+    width: 100%;
+    max-width: 1440px;
+    .top-nav{
+        .arrow{
+            display: none;
+        }
+        padding: 50px 50px 0 50px;
+        background-color: white;
+        h2{
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 50px;
+        }
+        nav{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            ul{
+                display: flex;
+                list-style-type: none;
+                a{
+                    font-size: 14px;
+                    cursor: pointer;
+                    padding: 20px 30px;
+                    text-decoration: none;
+                    color: gray;
+                    &:hover{
+                        background-color: black;
+                        color: white;
+                    }
+                }
+                .active{
+                    border-bottom: 2px solid black;
+                    color: #002f34;
+                    &:hover{
+                        color: #002f34;
+                        background-color: white;
+                    }
+                }
+            }
+            button{
+                color: #002f34;
+                border: 2px solid #002f34;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-weight: bold;
+                background-color: white;
+            }
+        }
+
+    }
+    .liked-prods{
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 50px 0;
+        width: 100%;
+    }
+
+}
+@media (max-width: 1024px){
+    .liked{
+        width: 100%;
+        .top-nav{
+            .arrow{
+                display: block;
+                font-size: 30px;
+                padding: 20px 10px;
+            }
+            padding: 10px;
+            h2{
+                font-size: 30px;
+                font-weight: bold;
+                margin-bottom: 20px;
+                padding: 0 10px;
+            }
+            .none{
+                display: none !important;
+            }
+            nav{
+                ul{
+                    width: 100%;
+                    a{
+                        width: 100%;
+                        text-align: center;
+                        cursor: pointer;
+                    }
+                }
+            }
+    
+        }
+        .liked-prods{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 30px 0;
+        }
+    }
+}

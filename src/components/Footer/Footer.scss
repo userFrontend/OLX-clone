@@ -1,0 +1,83 @@
+footer{
+    padding: 60px 0;
+    border-top: 1px solid #7f9799;
+    font-family: sans-serif;
+    width: 100%;
+    .about-box{
+        display: flex;
+        align-items: start;
+        gap: 50px;
+        .content{
+            .content-list{
+                display: flex;
+                gap: 30px;
+                font-weight: bold;
+                ul{
+                    display: flex;
+                    flex-direction: column;
+                    list-style-type: none;
+                    gap: 15px;
+                    li{
+                        color: #002f34;
+                        span{
+                            padding: 2px 0;
+                            &:hover{
+                                cursor: pointer;
+                                color: white;
+                                background-color: #002f34;
+                            }
+                        }
+                    }
+                }
+            }
+            .flags{
+                padding: 35px 0;
+                ul{
+                    display: flex;
+                    gap: 15px;
+                    list-style-type: none;
+                    li{
+                        display: flex;
+                        font-weight: normal;
+                        font-size: 12px;
+                        gap: 5px;
+                        filter: grayscale(1);
+                        img{
+                            width: 15px;
+                            height: 10px;
+                        }
+                        &:hover{
+                            filter: grayscale(0);
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+        .about{
+            .buttons{
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                img{
+                    cursor: pointer;
+                    height: 55px;
+                    object-fit: contain;
+                    &:nth-child(2){
+                        height: 40px;
+                    }
+                }
+            }
+            span{
+                color: #7f9799;
+                font-size: 13px;
+                padding: 10px;
+            }
+        }
+    }
+}
+@media (max-width: 1024px){
+ footer{
+    display: none;
+ }   
+}

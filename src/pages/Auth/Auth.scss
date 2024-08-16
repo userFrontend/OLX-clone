@@ -1,0 +1,192 @@
+.signup {
+    position: relative;
+    width: 100%;
+    height: 105vh;
+    background-color: #3A77FF;
+    overflow: hidden;
+    .curcle {
+        position: absolute;
+        margin: 0 auto;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 110vw;
+        height: 110vw;
+        border: 160px solid #CEDDFF;
+        border-radius: 50%;
+        animation: loader 1.5s ease-out;
+    }
+    
+    @keyframes loader {
+        from {
+            width: 0;
+            height: 0;
+        }
+    
+        ;
+    
+        to {
+            width: 100vw;
+        }
+    
+        ;
+    }
+    .signup-page {
+        background-color: white;
+        max-width: 400px;
+        width: 100%;
+        padding: 20px;
+        margin: 0px auto;
+        display: block;
+        position: relative;
+        top: 50px;
+        border-radius: 4px;
+        .auth-type{
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 10px 0;
+            .facebook {
+                padding: 9px;
+                width: 100%;
+                background-color: transparent;
+                border: 4px solid #002F34;
+                border-radius: 4px;
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: 0.7px;
+                transition: all 0.1s linear;
+                i {
+                    color: rgb(24, 119, 242);
+                    margin-right: 10px;
+                }
+                &:hover {
+                    box-shadow: inset 0 0 0 3px #002F34;
+                }
+            }
+            .apple {
+                i {
+                    color: black;
+                    font-size: 22px;
+                }
+            }
+            .google {
+                img {
+                width: 30px;
+                height: 30px;
+                }
+            }
+        }
+        
+        .input{     
+            display: flex;
+            flex-direction: column;
+            gap: 20px;  
+            .typeAuth{
+                display: flex;
+                align-items: center;
+                h5 {
+                    font-size: 14px;
+                    font-weight: normal;
+                    font-family: Geomanist, sans-serif;
+                    text-align: center;
+                    transition: all 0.1s ease;
+                    width: 100%;
+                    padding: 10px;
+                    border-bottom: 3px solid #ffffff;
+                    &:hover {
+                        border-bottom: 3px solid #002F34;
+                    }
+                }
+            }
+            label {
+                display: inline;
+                input {
+                    background: #F2F4F5;
+                    border: none;
+                    border-bottom: 2px solid transparent;
+                    border-radius: 4px;
+                    box-sizing: border-box;
+                    color: #002F34;
+                    font-size: 16px;
+                    height: 48px;
+                    width: 100% !important;
+                    padding: 14px 16px 14px 16px;
+                }
+            }
+            .password {
+                position: relative;
+                i {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 50%;
+                    padding: 5px;
+                    right: 5%;
+                    transform: translate(50%, -10%);
+                    user-select: none;
+                }
+            }   
+        }
+        .span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }      
+        .border {
+            width: 100%;
+            height: 1px;
+            border-bottom: 1px solid gray;
+        }
+        
+        .a-p {
+            text-decoration: none;
+            color: #020808;
+        }
+        
+        .a-p:hover {
+            color: #002F34;
+        }
+        .zabil {
+            text-decoration: none;
+            color: #002F34;
+            margin-left: 10px;
+        }
+        
+        .zabil:hover {
+            text-decoration: none;
+            color: #002F34;
+            margin-left: 10px;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #002F34;
+            border: #002F34;
+            border: 5px solid;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            &:hover {
+                width: 100%;
+                padding: 14px;
+                background-color: #fff;
+                border: 5px solid;
+                border-radius: 10px;
+                color: #002F34;
+            }
+        }
+    }
+    @media(max-width: 425px) {
+        .signup-page {
+            width: 100%;
+            height: 100%;
+            top: 0; 
+        }
+        .curcle {
+            display: none;
+        }
+    }
+}
+
+

@@ -17,7 +17,7 @@ const Card = ({ prod }) => {
                 <img src={prod?.photos?.length > 0 ? prod?.photos[0]?.url : '/images/work.jpg'} alt="card_img" />
             </Link>     
             <div className="card-body">
-                <Link to={`/prod${prod?._id}`} className="card-content">
+                <Link to={`/prod/${prod?._id}`} className="card-content">
                     <div className="price-card">
                         <p className='content'>{prod?.name}</p>
                         <b>{prod?.price ? prod.price : prod?.salary}</b>

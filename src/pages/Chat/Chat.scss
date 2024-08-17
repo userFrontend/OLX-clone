@@ -121,6 +121,9 @@
             overflow-y: auto;
             height: 43vh;
             padding: 20px 0;
+            &::-webkit-scrollbar{
+                display: none;
+            }
         }
         .message-box{
         }
@@ -151,6 +154,12 @@
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
+                        a{
+                            i{
+                                font-size: 25px;
+                                padding: 10px 20px;
+                            }
+                        }
                     }
                 }
             }
@@ -160,6 +169,22 @@
                 display: none;
 
             }
+        }
+    }
+    @media (max-width: 890px){
+        .profiles{
+            height: 100% !important;
+        }
+    }
+    @media (max-width: 450px){
+        .top-contact{
+            background-color: white;
+            position: fixed;
+            width: 92%;
+            top: 0;
+        }
+        .miss-chat{
+            margin-top: 150px;
         }
     }
 }

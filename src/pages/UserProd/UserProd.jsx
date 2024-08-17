@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import "./UserProd.scss";
 import { Link, NavLink } from "react-router-dom";
 import { useInfoContext } from "../../context/infoContext";
-import Card from "../../components/Card/Card";
 import Loader from "../../components/Loader/Loader";
 import { deleteProd } from "../../api/deleteRequest";
 import { toast } from "react-toastify";
+import {getProd } from "../../api/getRequest";
 
 const UserProd = () => {
-  const { cards, toggleReset, currentUser, exit, works, category} = useInfoContext();
+  const { cards, toggleReset, currentUser, exit, works, category, users} = useInfoContext();
   const [reset, setReset] = useState(false)
   const userArr = [...cards, ...works]
 
@@ -47,6 +47,7 @@ const UserProd = () => {
       }
     }
   }
+
   return (
     <div className="my">
 
@@ -154,9 +155,9 @@ const UserProd = () => {
                   </div>
                 );
               }) : 
-              userArr.map((res) => {
+              userArr.map((res) => {                
                 return (
-                  <div style={res.authorId === currentUser._id ? {backgroundColor: 'white'} : {backgroundColor: 'whitesmoke', border: '2px solid white', color: 'gray'}} key={res._id} className="card-user">
+                  <div style={res.authorId === currentUser._id ? {backgroundColor: 'white'} : {backgroundColor: 'whitesmoke', border: '2px solid green', color: 'gray'}} key={res._id} className="card-user">
                     <div className="one">
                       <div className="card-info">
                         {res?.photos?.length > 0 && <img src={res.photos[0].url} alt="" />}
@@ -170,7 +171,18 @@ const UserProd = () => {
                           {new Date(
                             res.createdAt
                           ).toLocaleDateString()} <br />
-                          {currentUser.role === 'admin' && res.authorId !== currentUser._id && <b style={{color: 'gray'}}>Это Объявления от (<span style={{backgroundColor: 'red', color: 'white', padding: "5px"}}>{res?.user?.firstname ? res.user.firstname : "Новый пользователь"}</span>)</b>}
+                          {currentUser.role === 'admin' && res.authorId !== currentUser._id && users.map(user => {
+                              if(user._id === res.authorId){
+                                return <div key={user._id}>
+                                    <b style={{color: 'gray'}}>Это Объявления от
+                                      [ <span style={{backgroundColor: 'green', color: 'white', padding: "5px", borderRadius: '5px'}}>
+                                        {user?.firstname ? user.firstname : "Новый пользователь"}
+                                      </span> ]
+                                    </b>
+                                    <p>{user.email}</p>
+                                </div>
+                              }
+                          })}
                         </div>
                       </div>
                       <div className="card-status">

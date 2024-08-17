@@ -10,10 +10,11 @@ const serverURL = process.env.REACT_APP_SERVER_URL
 const socket = io(serverURL)
 
 const Chat = () => {
-  const {chats, exit, setChats, currentUser,  asnwerMessage, setAnswerMessage, setSendMessage, sendMessage, setCurrentChat, setOnlineUsers} = useInfoContext()
-  const [deleted, setDeleted] = useState(false);
+  const {chats, exit, setChats, currentUser, sendMessage, setCurrentChat, setOnlineUsers, currentChat, setPage} = useInfoContext()
+  const [deleted, setDeleted] = useState(null);
   const [loading, setLoading] = useState(false);
   const [socketDel, setSocketDel] = useState(false);
+  const [messages, setMessages] = useState([])
   const [chat, setChat] = useState(0);
 
   const scroll = useRef(null)
@@ -35,37 +36,68 @@ const Chat = () => {
       }
     }
     getchats()
-  },[currentUser._id, loading, deleted])
+  },[loading, messages])
 
- useEffect(() => { 
+  useEffect(() => { 
     socket.emit("new-user-added", currentUser._id); 
- 
-    socket.on("get-users", (users) => { 
-      setOnlineUsers(users); 
-    }); 
-  }, [currentUser._id,]); 
- 
+  
+    const handleGetUsers = (users) => {
+      setOnlineUsers(users);
+    };
+  
+    socket.on("get-users", handleGetUsers);
+  
+    return () => {
+      socket.off("get-users", handleGetUsers);
+    };
+  }, [currentUser._id]); 
+  
   useEffect(() => { 
     if (sendMessage !== null) {
       socket.emit("send-message", sendMessage);   
-    } 
-  }, [sendMessage]); 
-
-  useEffect(() => { 
-    socket.on("answer-message", (data) => { 
-      setAnswerMessage(data); 
-    }); 
-  }, [asnwerMessage]); 
- 
-  useEffect(() => {
-    if(socketDel){
-      setSocketDel(false)
-      socket.emit('delete-message')
     }
-    socket.on('deleted', () => {
-      setDeleted(!deleted)
-    })
-  }, [socketDel]);
+  }, [sendMessage]);
+  
+  useEffect(() => { 
+    const handleAnswerMessage = (data) => {
+      if(currentChat && data !== null && data.chatId === currentChat._id){
+        setMessages([...messages, data])
+    }
+    };
+  
+    socket.on("answer-message", handleAnswerMessage);
+
+    return () => {
+      socket.off("answer-message", handleAnswerMessage);
+    };
+  }, [messages]);
+    
+  useEffect(() => {
+    if (deleted) {
+      setDeleted(null); 
+      socket.emit('delete-message', deleted);
+    }
+  
+    const handleDeleted = (data) => {
+      if (data && data?._id) {
+        if(currentChat && data && data?._id === currentChat?._id){
+          setChat(0)
+          setLoading(!loading)
+        }
+        const filtered = messages.filter(message => message?._id !== data?._id);
+        if(filtered.length > 0){
+          setMessages(filtered);
+        }
+      }
+      setDeleted(null);
+    };
+  
+    socket.on('deleted', (message) => handleDeleted(message));
+  
+    return () => {
+      socket.off('deleted', handleDeleted);
+    };
+  }, [deleted, messages]);
   
   
   return (
@@ -131,7 +163,7 @@ const Chat = () => {
               </div>
             </div>
             <div className={chat === 1 ? 'message-box' : 'message-box message-none'}>
-              <Message asnwerMessage={asnwerMessage} setSendMessage={setSendMessage} sendMessage={sendMessage} socketDel={socketDel} setPage={setChat} setSocketDel={setSocketDel} deleted={deleted} setDeleted={setDeleted} loading={loading} setLoading={setLoading}/>
+              <Message setMessages={setMessages} messages={messages} socketDel={socketDel} setPage={setChat} setSocketDel={setSocketDel} deleted={deleted} setDeleted={setDeleted} loading={loading} setLoading={setLoading}/>
             </div>
         </div>
       </div>

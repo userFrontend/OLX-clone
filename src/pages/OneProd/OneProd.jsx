@@ -13,7 +13,7 @@ const serverURL = process.env.REACT_APP_SERVER_URL
 const socket = io(serverURL)
 
 const OneProd = () => {
-  const { setOnlineUsers, chats, exit, currentUser,  currentChat, setCurrentChat, onlineUsers, setSendMessage, sendMessage, asnwerMessage, setAnswerMessage} = useInfoContext()
+  const { setOnlineUsers, chats, exit, currentUser,  currentChat, setCurrentChat, onlineUsers, setSendMessage, sendMessage} = useInfoContext()
   const [prod, setProd] = useState(null)
   const [tel, setTel] = useState(false)
   const [similar, setSimilar] = useState([])
@@ -42,7 +42,9 @@ const OneProd = () => {
             }
             if(result){
             const resSim = await getSimilar('car', result.name)
-            setSimilar(resSim.data.similar)
+            const filterAdd = resSim?.data?.similar?.filter(res => res._id !== id)
+            setProd(result)
+            setSimilar(filterAdd)
             setProd(result)
           }
         } catch (error) {
@@ -61,17 +63,24 @@ const OneProd = () => {
     }, [currentUser._id,]); 
    
     useEffect(() => { 
-      if (sendMessage !== null) { 
-        console.log(sendMessage);
+      if (sendMessage !== null) {
         socket.emit("send-message", sendMessage);   
-      } 
-    }, [sendMessage]); 
+      }
+    }, [sendMessage]);
   
     useEffect(() => { 
-      socket.on("answer-message", (data) => { 
-        setAnswerMessage(data); 
-      }); 
-    }, [asnwerMessage]); 
+      const handleAnswerMessage = (data) => {
+        if(currentChat && data !== null && data.chatId === currentChat._id){
+          setMessages([...messages, data])
+      }
+      };
+    
+      socket.on("answer-message", handleAnswerMessage);
+  
+      return () => {
+        socket.off("answer-message", handleAnswerMessage);
+      };
+    }, [messages]); 
    
 
   const toggleChat = () => setOpenChat(!openChat)
@@ -129,13 +138,6 @@ const OneProd = () => {
     }
   }
 
-useEffect(() => {
-    if(currentChat && asnwerMessage !== null && asnwerMessage?.chatId === currentChat?._id){
-        setMessages([...messages, asnwerMessage])
-    }
-}, [asnwerMessage])
-
-
 const online = () => {
     const onlineUser = onlineUsers.find(user => user.userId === userId)
     return onlineUser ? true : false
@@ -155,6 +157,9 @@ const online = () => {
     slidesToShow: 5,
     slidesToScroll: 5
   };
+
+  console.log(similar);
+  
 
   return (
     <div className="one-prod">
@@ -319,20 +324,23 @@ const online = () => {
             </div>
               <div className="carousel-item">
                 {prod?.userProd?.map(prod => {
-                  return <Card key={prod?._id} prod={prod} />
-                })}
+                    if(prod._id !== id){
+                      return <Card key={prod?._id} prod={prod} />
+                    }
+                  })}
               </div>
           </div>
-          <div className="carousel-prod">
-            <div className="top">
-              <h2>Похожие объявления</h2>
-            </div>
-              <div className="carousel-item">
-                {prod?.userProd?.map(prod => {
-                  return <Card key={prod?._id} prod={prod} />
-                })}
+          {similar.length > 0 &&
+            <div className="carousel-prod">
+              <div className="top">
+                <h2>Похожие объявления</h2>
               </div>
-          </div>
+                <div className="carousel-item">
+                  {similar.map(res => {
+                    return <Card key={res?._id} prod={res} />
+                  })}
+                </div>
+            </div>}
         </div>
       </div>
       <div className="media-info-prod">
@@ -412,11 +420,14 @@ const online = () => {
               </div>
                 <div className="carousel-item">
                   {prod?.userProd?.map(prod => {
-                    return <Card key={prod?._id} prod={prod} />
+                    if(prod._id !== id){
+                      return <Card key={prod?._id} prod={prod} />
+                    }
                   })}
                 </div>
             </div>
-            {similar?.length > 0 && <div className="carousel-prod">
+            {similar.length > 0 &&
+            <div className="carousel-prod">
               <div className="top">
                 <h2>Похожие объявления</h2>
               </div>

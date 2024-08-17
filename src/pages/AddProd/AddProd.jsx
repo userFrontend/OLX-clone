@@ -40,7 +40,6 @@ const AddProd = () => {
         const result = res?.data;
         
         toast.dismiss();
-
         toast.success(result?.message);
         toggleReset();
         setImages(Array(8).fill(null))
@@ -49,10 +48,12 @@ const AddProd = () => {
         setTypeId(null)
         setSend(false)
         e.target.reset();
+        window.location.replace('/')
     } catch (err) {
         setSend(false)
         toast.dismiss();
         toast.error(err?.response?.data?.message);
+        console.log(err);
         if (err?.response?.data?.message === 'jwt expired') {
             exit();
         }

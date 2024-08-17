@@ -8,10 +8,9 @@ import { getOneProd } from '../../api/getRequest'
 import { deleteProd } from '../../api/deleteRequest'
 
 
-const Message = ({asnwerMessage, setSendMessage, socketDel, setPage, setSocketDel, deleted, loading, setLoading}) => {
-    const {onlineUsers, currentChat, setCurrentChat, currentUser, exit} = useInfoContext()
+const Message = ({setMessages, messages, socketDel, setPage, setSocketDel, deleted, setDeleted, loading, setLoading}) => {
+    const {onlineUsers, currentChat, setCurrentChat, currentUser, exit, setSendMessage} = useInfoContext()
     const [userData, setUserData] = useState(null)
-    const [messages, setMessages] = useState([])
     const [delChat, setDelChat] = useState(false)
     const [send, setSend] = useState(false)
 
@@ -31,7 +30,7 @@ const Message = ({asnwerMessage, setSendMessage, socketDel, setPage, setSocketDe
                 const res = await getOneProd(userId, 'user')
                 setUserData(res.data.user);
             } catch (error) {
-                if(error.response.data.message === 'jwt exprired'){
+                if(error?.response?.data?.message === 'jwt exprired'){
                     exit()
                 }
             }
@@ -39,15 +38,18 @@ const Message = ({asnwerMessage, setSendMessage, socketDel, setPage, setSocketDe
         if(currentChat && userId){
             getUsers()
         }
-    },[userId, delChat. currentChat])
+    },[userId, delChat, currentChat])
+
 
     useEffect(()=>{
         const fetchMessage = async () => {
             try {
-                const {data} = await getMessage(currentChat._id)
-                setMessages(data.messages)
+                if(currentChat){
+                    const {data} = await getMessage(currentChat._id)
+                    setMessages(data.messages)
+                }
             } catch (error) {
-                if(error.response.data.message === 'jwt exprired'){
+                if(error?.response?.data?.message === 'jwt exprired'){
                     exit()
                 }
             }
@@ -55,14 +57,8 @@ const Message = ({asnwerMessage, setSendMessage, socketDel, setPage, setSocketDe
         if(currentChat){
             fetchMessage()
         }
-    }, [currentChat, socketDel, asnwerMessage, delChat])
+    }, [currentChat, socketDel, delChat, deleted])
     
-    useEffect(() => {
-        if(currentChat && asnwerMessage !== null && asnwerMessage.chatId === currentChat._id){
-            setMessages([...messages, asnwerMessage])
-        }
-    }, [asnwerMessage])
-
 
     const online = () => {
         const onlineUser = onlineUsers.find(user => user.userId === userId)
@@ -70,78 +66,90 @@ const Message = ({asnwerMessage, setSendMessage, socketDel, setPage, setSocketDe
     }
 
     const deleteUserChat = async () => {
-        const confirmPass = window.confirm('Подвердите удалить...')
-        if(confirmPass){
-            setSocketDel(true)
-        try {
-            const res = await deleteChat(currentChat._id);
-            setLoading(!loading)
-            setCurrentChat(null)
-            setPage(0)
-        } catch (err) {
-            toast.dismiss()
-            toast.error(err.response.data.message)
-            if(err.response.data.message === 'jwt exprired'){
-                exit()
+        const confirmPass = window.confirm('Подвердите удалить...');
+        if (confirmPass) {
+            setSocketDel(true);
+            try {
+                await deleteChat(currentChat._id);
+                setLoading(!loading);
+                setCurrentChat(null);
+                setPage(0);
+                setDeleted(currentChat)
+            } catch (err) {
+                toast.dismiss();
+                toast.error(err.response.data.message);
+                if (err.response.data.message === 'jwt exprired') {
+                    exit();
+                }
             }
-        }
         }
     }
-
-
-      const handleSend = async (e) => {
-        e.preventDefault()
+    
+    const handleSend = async (e) => {
+        e.preventDefault();
         try {
-            const formData = new FormData(e.target)
-            if(formData.get('text') === ""){
-                return
+            const formData = new FormData(e.target);
+            if (formData.get('text') === "") {
+                return;
             }
-
-            formData.append('senderId', currentUser._id); 
-            formData.append('chatId', currentChat._id); 
-
+    
+            formData.append('senderId', currentUser._id);
+            formData.append('chatId', currentChat._id);
+    
             const newMessage = {
                 senderId: currentUser._id,
                 chatId: currentChat._id,
                 text: formData.get('text'),
                 createdAt: new Date().getTime(),
-            }
-
-            setSend(true)
-            setSendMessage({...newMessage, receivedId: userId})
-        
-            const {data} = await addMessage(formData);
-            setMessages([...messages, data.messages])
-            setSend(false)
-            e.target.reset()
-        } catch (error) {
-            toast.dismiss()
-            toast.error(error?.response?.data.message)
-            if(error?.response?.data.message === 'jwt exprired'){
-                exit()
-            }
-        }
-      }
-
-      const handleDel = async (id) => {
-        try {
-            await deleteProd(id, 'message')
-            setSocketDel(true)
-        } catch (error) {
-            toast.dismiss()
-            toast.error(error?.response?.data.message)
-        }
-      }
-
-      const [swipedIndex, setSwipedIndex] = useState(null);
-
-      const handleSwipeStart = (index) => {
-        setSwipedIndex(index);
-      };
+            };
     
-      const handleSwipeEnd = () => {
-        setSwipedIndex(null);
-      };
+            setSend(true);
+            setSendMessage({...newMessage, receivedId: userId});
+    
+            const {data} = await addMessage(formData);
+            setMessages([...messages, data.messages]);
+            setSend(false);
+            e.target.reset();
+        } catch (error) {
+            toast.dismiss();
+            toast.error(error?.response?.data.message);
+            if (error?.response?.data.message === 'jwt exprired') {
+                exit();
+            }
+        }
+    }
+    
+    const handleDel = async (message) => {
+        try {
+            await deleteProd(message._id, 'message');
+            setSocketDel(true);
+            setDeleted(message)
+        } catch (error) {
+            toast.dismiss();
+            toast.error(error?.response?.data.message);
+        }
+    }
+    
+
+    const [swipedIndex, setSwipedIndex] = useState(null);
+    const [longPressTimeout, setLongPressTimeout] = useState(null);
+
+    // 2 soniyadan keyin `handleSwipeStart` ishga tushadi
+    const handleSwipeStart = (index) => {
+    const timeout = setTimeout(() => {
+        setSwipedIndex(index);
+    }, 1100);
+    setLongPressTimeout(timeout);
+    };
+
+    const handleSwipeEnd = () => {
+    if (longPressTimeout) {
+        clearTimeout(longPressTimeout);
+    }
+    setLongPressTimeout(null);
+    setSwipedIndex(null);
+    };
+
 
       const today = new Date().toLocaleDateString();
 
@@ -168,19 +176,33 @@ const Message = ({asnwerMessage, setSendMessage, socketDel, setPage, setSocketDe
             <div className="send-message">
             <b style={{textAlign: 'center', fontSize: '12px'}}>начилос в {new Date(currentChat.createdAt).toLocaleDateString()}</b>
             {messages?.length > 0 ? messages.map((chat, index) => {
-                return(<div key={chat._id}>
+                return(<div key={index}>
                     <div className={chat.senderId === currentUser._id ? "messages own" : "messages"}>
                     <div className="div-del">
-                        <div className={index === swipedIndex ? 'swiped span-box' : 'span-box'} onTouchStart={() => handleSwipeStart(index)} onTouchEnd={handleSwipeEnd} onMouseDown={() => handleSwipeStart(index)} onMouseUp={handleSwipeEnd}>
-                            <span>
-                            {chat.file && <img style={{width: '100%'}} src={`${chat?.file?.url}`} alt='chat_img'/>}    
-                            {chat.text} </span>
-                            <div className="div-flex">
-                            <strong className='message-time'>{new Date(chat.createdAt).toLocaleDateString() === today ? `${new Date(chat.createdAt).toLocaleTimeString().slice(0, 5)}` : new Date(chat.createdAt).toLocaleDateString()}</strong>{chat.senderId === currentUser._id && <img width={15} src="/images/double_check.png" alt="" />}
-                            </div>
+                    <div 
+                        className={index === swipedIndex ? 'swiped span-box' : 'span-box'} 
+                        onTouchStart={() => handleSwipeStart(index)} 
+                        onTouchEnd={handleSwipeEnd} 
+                        onMouseDown={() => handleSwipeStart(index)} 
+                        onMouseUp={handleSwipeEnd}
+                    >
+                        <span>
+                        {chat.file && <img style={{ width: '100%' }} src={`${chat?.file?.url}`} alt="chat_img" />}
+                        {chat.text}
+                        </span>
+                        <div className="div-flex">
+                        <strong className="message-time">
+                            {new Date(chat.createdAt).toLocaleDateString() === today
+                            ? `${new Date(chat.createdAt).toLocaleTimeString().slice(0, 5)}`
+                            : new Date(chat.createdAt).toLocaleDateString()}
+                        </strong>
+                        {chat.senderId === currentUser._id && (
+                            <img width={15} src="/images/double_check.png" alt="" />
+                        )}
                         </div>
+                    </div>
                         {index === swipedIndex && chat.senderId === currentUser._id && (
-                            <button onClick={() => handleDel(chat._id)}><i className='fa-solid fa-trash'></i></button>
+                            <button onClick={() => handleDel(chat)}><i className='fa-solid fa-trash'></i></button>
                             )}
                     </div>
                             <div ref={scrollMessage}></div>

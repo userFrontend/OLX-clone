@@ -23,7 +23,7 @@ function App() {
   
   useEffect(() => {
     const rePath = () => {
-      if(path === '/add' && !currentUser || path === '/account' && !currentUser || path === '/my' && !currentUser  || path === '/like' && !currentUser){
+      if(path === '/add' && !currentUser || path === '/account' && !currentUser || path === '/chat' && !currentUser || path === '/my' && !currentUser  || path === '/like' && !currentUser){
         setIsSignUp(true)
       } else {
         setIsSignUp(false)

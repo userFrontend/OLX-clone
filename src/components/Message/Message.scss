@@ -23,7 +23,7 @@
         align-items: center;
     }
     .swiped {
-        transform: translateX(-15px);
+        transform: translateX(-5px);
         transition: transform 0.3s ease;
       }
       
@@ -63,6 +63,9 @@
         flex-direction: column;
         gap: 15px;
         overflow-y: auto;
+        &::-webkit-scrollbar{
+            display: none;
+        }
         .messages{
             .span-box{
                 display: flex;
@@ -71,8 +74,10 @@
                 width: 100%;
                 span{
                     background-color: rgba(128, 128, 128, 0.425);
-                    padding: 5px;
+                    padding: 5px 10px;
                     max-width: 150px;
+                    font-weight: 500;
+                    border-radius: 5px;
                 }
                 .message-time{
                     font-size: 10px;
@@ -147,16 +152,97 @@
     }
 }
 
+@media (max-width: 890px){
+    .message-box{
+        .send-message{
+            height: 86vh !important;
+        }
+        .profile-box{
+            padding: 20px !important;
+            .profile-content{
+                .exit{
+                    font-size: 30px;
+                    margin-right: 20px;
+                }
+            }
+        }
+        width: 100vw !important;
+        .div-del{
+            button{
+                padding: 10px 15px !important;
+                border-radius: 5px;
+                font-size: 22px;
+                font-weight: 500;
+            }
+        }
+        .span-box{
+            span, button{
+                padding: 10px !important;
+                border-radius: 5px;
+                font-size: 25px;
+                font-weight: 500;
+            }
+        }
+        .send-input-box{
+            .input-form{
+                padding: 10px 20px;
+                background-color: white;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                i{
+                    font-size: 30px;
+                }
+                input{
+                    font-size: 22px;
+                }
+            }
+        }
+    }
+}
 @media (max-width: 450px){
-    .profile-box{
-        .profile-set{
-            i{
-                &:nth-child(2){
-                    display: none;
+    .message-box{
+        .profile-box{
+            padding: 20px 10px !important;
+            .profile-content{
+                .exit{
+                    font-size: 25px;
+                    margin-right: 10px;
                 }
-                &:nth-child(3){
-                    display: none;
+            }
+            .profile-set{
+                i{
+                    &:nth-child(2){
+                        display: none;
+                    }
+                    &:nth-child(3){
+                        display: none;
+                    }
                 }
+            }
+        }
+        .send-input-box{
+            .input-form{
+                padding: 10px 20px;
+                background-color: white;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                i{
+                    font-size: 25px !important;
+                }
+                input{
+                    font-size: 20px !important;
+                }
+            }
+        }
+        .send-message{
+            height: 84vh !important;
+        }
+        .span-box{
+            span{
+                padding: 5px !important;
+                font-size: 20px !important;
             }
         }
     }

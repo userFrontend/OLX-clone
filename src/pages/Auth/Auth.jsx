@@ -41,8 +41,8 @@ const Auth = ({reset}) => {
         } catch (error) {
             setLoading(false)
             toast.dismiss()
-            toast.error(error?.response?.data.message)
-            console.error(error?.response?.data.message)
+            toast.error(error?.response?.data?.message)
+            console.error(error?.response?.data?.message)
         }
 
         
